@@ -14,8 +14,8 @@ class Player(Block):
     pass
 
 def main():
-    width = 800
-    height = 800
+    width = 400
+    height = 400
     green_color = (0, 180, 0 )
 
     pygame.init()
@@ -24,13 +24,20 @@ def main():
     clock = pygame.time.Clock()
 
     # Load dealer image
-    dealer_image = pygame.image.load('images/Playing_card_spade_3.svg').convert_alpha()
+    # if dealer face up card == something then, we load the right card
+    dealer_card_1 = pygame.image.load('images/heart_A.svg.png').convert_alpha()
+    dealer_card_2 = pygame.image.load('images/face_down.png').convert_alpha()
 
 
     # Our dealer
-    dealer = Dealer(dealer_image, [400, 200])
-    dealer_group = pygame.sprite.Group()
-    dealer_group.add(dealer)
+    dealer_1 = Dealer(dealer_card_1, [200, 100])
+    dealer_group_1 = pygame.sprite.Group()
+    dealer_group_1.add(dealer_1)
+
+    # Our dealer2
+    dealer_2 = Dealer(dealer_card_2, [250, 100])
+    dealer_group_2 = pygame.sprite.Group()
+    dealer_group_2.add(dealer_2)
     
     # Game initialization
 
@@ -51,7 +58,8 @@ def main():
         screen.fill(green_color)
 
         # Game display
-        dealer_group.draw(screen)
+        dealer_group_1.draw(screen)
+        dealer_group_2.draw(screen)
         
         pygame.display.update()
         clock.tick(60)
