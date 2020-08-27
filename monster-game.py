@@ -37,7 +37,7 @@ def main():
     player_group.add(player)
 
     # Our monster
-    monster = Monster(monster_image, [50, 100])
+    monster = Monster(monster_image, [0, 0])
     monsters_group = pygame.sprite.Group()
     monsters_group.add(monster)
 
