@@ -25,6 +25,8 @@ class Card(object):
         self.val = val
         self.number_val()
 
+    def show(self):
+        print(f"{self.val} of {self.suit}")
 
     def number_val(self):
         self.numb = Card.numb_direct.get(self.val)
@@ -42,13 +44,16 @@ class Deck(object):
 
     #Automatically called when an instance is initiated.
     def build(self):
-        all_suits = ["Spades", "Clubs", "Diamonds", "Hearts"]
+        all_suits = ["spade", "club", "diamond", "heart"]
         all_val = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
-        for i in range(1, 6): #makes 6
+        for i in range(1, 7): #makes 6
             for s in all_suits:
                 for v in all_val:
                     self.cards.append(Card(s, v))
-    
+    def show(self):
+        for c in self.cards:
+            c.show()
+
     def shuffle(self):
         #Starts at the furthest number and stops at zero, and iterates by -1 each time.
         for i in range(len(self.cards) - 1, 0, -1):
@@ -228,8 +233,10 @@ def main():
     user = Player()
     dealer = Dealer()
 
+    # main_deck.show()
     # shuffles the deck
-    main_deck.shuffle
+    main_deck.shuffle()
+    # main_deck.show()
 
     # now we deal the cards
     for i in range(0,4):
@@ -237,8 +244,14 @@ def main():
             user.draw(main_deck)
         else:
             dealer.draw(main_deck)
-    # for card in user.hand:
-    # print(f'{card.suit} of {user.hand[0].call_numb_val()}')
+
+    for card in dealer.hand:
+        card.show()
+
+    for card in user.hand:
+        card.show()
+    
+
     # print(f'{user.hand[1].suit} of {user.hand[1].call_numb_val()}')
     # print(dealer.hand)
 
@@ -246,13 +259,16 @@ def main():
     deck = pygame.image.load('images/face_down.png').convert_alpha()
 
     
-    # if dealer face up card == something then, we load the right card
-    dealer_card_1 = pygame.image.load('images/heart_A.svg.png').convert_alpha()
-    dealer_card_2 = pygame.image.load('images/face_down.png').convert_alpha()
+    # user cards
+    player_card_1 = pygame.image.load(f'images/{user.hand[0].suit}_{user.hand[0].val}.svg.png').convert_alpha()
+    player_card_2 = pygame.image.load(f'images/{user.hand[1].suit}_{user.hand[1].val}.svg.png').convert_alpha()
+    # once the user has more than two cards, we add more pictures
+    # if len(user.hand) == 2:
 
-    # show the players cards
-    player_card_1 = pygame.image.load('images/spade_A.svg.png').convert_alpha()
-    player_card_2 = pygame.image.load('images/heart_J.svg.png').convert_alpha()
+
+    # dealer cards
+    dealer_card_1 = pygame.image.load(f'images/{dealer.hand[0].suit}_{dealer.hand[0].val}.svg.png').convert_alpha()
+    dealer_card_2 = pygame.image.load(f'images/{dealer.hand[1].suit}_{dealer.hand[1].val}.svg.png').convert_alpha()
 
 
     # the two decks for shuffling
@@ -302,8 +318,8 @@ def main():
                     pygame.display.update()
 
                 # if the n key is pressed, then the we go into the dealers actions
-                if event.key == pygame.K_n:
-                    pass
+                if event.key == pygame.K_h:
+                    another_card()
        
         # gets all the keys currently pressed
         keys = pygame.key.get_pressed()
