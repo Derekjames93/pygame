@@ -6,6 +6,9 @@ class Block(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.center = pos
+    
+    def blitme(self):
+        self.screen.blit(self.image, self.rect.center)
 
 class Show_Cards(Block):
     pass
@@ -20,6 +23,10 @@ def main():
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Pete\'s Poker Place')
     clock = pygame.time.Clock()
+
+    # create the rectangle for the bar down on the bottom
+    ribbon = pygame.Rect(0, 340, 400, 80)
+    ribbon_color = (100, 100, 100)
 
     # houses the pictures for the two decks
     deck = pygame.image.load('images/face_down.png').convert_alpha()
@@ -72,15 +79,16 @@ def main():
                     stop_game = True
 
                 # if the y key is pressed, then we add a card to our user hand
-                if event.key == pygame.K_y:
+                if event.key == pygame.K_LEFT:
                     # print these only after we have shuffled
                     dealer_card_group.draw(screen)
                     player_card_group.draw(screen)
-
+                    pygame.display.update()
 
                 # if the n key is pressed, then the we go into the dealers actions
                 if event.key == pygame.K_n:
                     pass
+       
         # gets all the keys currently pressed
         keys = pygame.key.get_pressed()
         # Game logic
@@ -91,12 +99,7 @@ def main():
         # Game display
         # pre-shuffled deck
         deck_group.draw(screen) ## want to add in some sort of shuffle animation that goes before the player and dealer cards are dealt
-
-        # update the cards when a key is pressed
-        # so ideally this would show the cards once the player presses the y button
-        dealer_card_group.update(keys)
-        player_card_group.update(keys)
-
+        pygame.draw.rect(screen, ribbon_color, ribbon)
 
 
         pygame.display.update()
