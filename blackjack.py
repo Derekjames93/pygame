@@ -1,4 +1,202 @@
 import pygame
+import random
+
+class Card(object):
+    numb_direct = {
+        # an ace can be either 1 or 11
+        "Ace" : [1, 11],
+        "Two" : 2,
+        "Three" : 3,
+        "Four" : 4,
+        "Five" : 5,
+        "Six" : 6,
+        "Seven" : 7,
+        "Eight" : 8,
+        "Nine" : 9,
+        "Ten" : 10,
+        "Jack" : 10,
+        "Queen" : 10,
+        "King" : 10,
+    }
+
+
+    def __init__(self, suit, val):
+        self.suit = suit
+        self.val = val
+        self.number_val()
+
+
+    def number_val(self):
+        self.numb = Card.numb_direct.get(self.val)
+
+    def call_numb_val(self):
+        return self.numb
+
+
+#Creates a many_decks number of decks of cards, 4 suites, 13 cards per suite, ranging from ace to king.
+class Deck(object):
+
+    def __init__(self, many_decks):
+        self.many_decks = many_decks
+        self.cards = []
+        self.build()
+
+    #Automatically called when an instance is initiated.
+    def build(self):
+        all_suits = ["Spades", "Clubs", "Diamonds", "Hearts"]
+        all_val = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
+        for i in range(1, 6): #makes 6
+            for s in all_suits:
+                for v in all_val:
+                    self.cards.append(Card(s, v))
+    
+    def shuffle(self):
+        #Starts at the furthest number and stops at zero, and iterates by -1 each time.
+        for i in range(len(self.cards) - 1, 0, -1):
+            r = random.randint(0, i)
+            # Swap elements by index in a list. use list[index] to access the element
+            self.cards[i], self.cards[r] = self.cards[r], self.cards[i]
+
+    def drawCard(self):
+        return self.cards.pop()
+
+
+
+class Player(object):
+    def __init__(self):
+        self.hand = []
+        self.hand_score = 0
+
+    def draw(self, deck):
+        self.hand.append(deck.drawCard())
+    
+    
+    def addCards(self):
+        total = 0
+        for card in self.hand:
+            total += card.call_numb_val()
+            #print(card.call_numb_val())
+        self.hand_score = total
+
+    def clear_hand(self):
+        self.hand = []
+        
+class Dealer(object):
+    def __init__(self):
+        self.hand = []
+        self.hand_score = 0
+    
+    def draw(self, deck):
+        self.hand.append(deck.drawCard())
+        return self
+    
+    def showHand(self):
+        for card in self.hand:
+            card.show()
+    
+    def addCards(self):
+        total = 0
+        for card in self.hand:
+            total += card.call_numb_val()
+            #print(card.call_numb_val())
+        self.hand_score = total
+    
+    def clear_hand(self):
+        self.hand = []
+
+
+#  class PlayHand(object):
+    #     score_board = {
+    #         "player" : 0,
+    #         "dealer" : 0
+    #     }
+
+    #     def __init__(self):
+    #         self.deck = Deck()
+    #         self.player = Player()
+    #         self.dealer = Dealer()
+    #         self.play()
+
+    #     def play(self):
+    #         self.player.clear_hand()
+    #         self.dealer.clear_hand()
+    #         self.deck.shuffle()
+    #         #self.deck.show()
+    #         #deal to player then dealer from the top of the deck, iterates twice. If modulus is 0 then it deals to player, if not, then it deals to the dealer
+    #         for i in range(0,4):
+    #             if i % 2 == 0:
+    #                 self.player.draw(self.deck)
+    #             else:
+    #                 self.dealer.draw(self.deck)
+
+    #         self.player.showHand()
+    #         self.player.addCards()
+    #         self.dealer.showTopCard()
+
+
+    #     def playerChoice(self):
+    #         if pygame.KEYDOWN == K_h:
+    #             self.player.draw(self.deck)
+    #             self.player.addCards()
+    #             if self.player.hand_score > 21:
+    #                 self.dealerwins()
+    #             return "hit"
+    #         elif pygame.KEYDOWN == K_s:
+    #             self.dealerChoice()
+    #             return "stay"
+
+        
+    #     def dealerChoice(self):
+    #         self.dealer.showHand()
+    #         self.dealer.addCards()
+    #         dealer_choice = ""
+    #         while dealer_choice != "stay":
+    #             if self.dealer.hand_score < 17:
+    #                 self.dealer.draw(self.deck)
+    #                 self.dealer.addCards()
+    #                 if self.dealer.hand_score > 21:
+    #                     self.playerwins()
+    #                 dealer_choice = "hit"
+    #             elif self.dealer.hand_score >= 17:
+    #                 dealer_choice = "stay"
+    #         self.decide_who_wins()
+
+        # def decide_who_wins(self):
+        #     if self.dealer.hand_score > self.player.hand_score:
+        #         self.dealerwins()
+        #     elif self.dealer.hand_score < self.player.hand_score:
+        #         self.playerwins()
+            # else:
+            #     print("The hand is pushed.\n\n")
+            #     dec = input("Play again?\n\n> ")
+            #     if dec == "yes":
+            #         self.play()
+            #     if dec == "no":
+            #         exit(0)
+
+        # def playerwins(self):
+        #     PlayHand.score_board["player"] += 1
+
+
+        # def dealerwins(self):
+        #     PlayHand.score_board["dealer"] += 1
+
+
+        # def prn_score(self):
+        #     player_score = PlayHand.score_board.get("player")
+        #     dealer_score = PlayHand.score_board.get("dealer")
+        #     total_hands = player_score + dealer_score
+        #     time.sleep(3)
+        #     print(f"\n\nAfter {total_hands} hands the score is:")
+        #     print(f"{self.player_name} has won {player_score} hands")
+        #     print(f"The Dealer has won {dealer_score} hands")
+        #     time.sleep(2)
+        #     print("\n\nWould you like to play another hand?")
+        #     resp = input("> ")
+        #     if resp == "yes":
+        #         self.play()
+        #     if resp == "no":
+        #         exit(0)
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, image, pos):
@@ -6,15 +204,21 @@ class Block(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.center = pos
-    
-    def blitme(self):
-        self.screen.blit(self.image, self.rect.center)
 
 class Show_Cards(Block):
     pass
 
 
 def main():
+    # makes our deck, user and dealer objects
+    main_deck = Deck()
+    user = Player()
+    dealer = Dealer()
+
+    # shuffles the deck
+    
+
+
     width = 400
     height = 400
     green_color = (0, 180, 0 )
