@@ -4,7 +4,7 @@ import random
 class Card(object):
     numb_direct = {
         # an ace can be either 1 or 11
-        "Ace" : [1, 11],
+        "Ace" : 11,
         "Two" : 2,
         "Three" : 3,
         "Four" : 4,
@@ -36,8 +36,7 @@ class Card(object):
 #Creates a many_decks number of decks of cards, 4 suites, 13 cards per suite, ranging from ace to king.
 class Deck(object):
 
-    def __init__(self, many_decks):
-        self.many_decks = many_decks
+    def __init__(self):
         self.cards = []
         self.build()
 
@@ -204,21 +203,13 @@ class Block(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.center = pos
+        self.should_show = False
 
 class Show_Cards(Block):
     pass
 
 
 def main():
-    # makes our deck, user and dealer objects
-    main_deck = Deck()
-    user = Player()
-    dealer = Dealer()
-
-    # shuffles the deck
-    
-
-
     width = 400
     height = 400
     green_color = (0, 180, 0 )
@@ -231,6 +222,25 @@ def main():
     # create the rectangle for the bar down on the bottom
     ribbon = pygame.Rect(0, 340, 400, 80)
     ribbon_color = (100, 100, 100)
+
+    # makes our deck, user and dealer objects
+    main_deck = Deck()
+    user = Player()
+    dealer = Dealer()
+
+    # shuffles the deck
+    main_deck.shuffle
+
+    # now we deal the cards
+    for i in range(0,4):
+        if i % 2 == 0:
+            user.draw(main_deck)
+        else:
+            dealer.draw(main_deck)
+    # for card in user.hand:
+    # print(f'{card.suit} of {user.hand[0].call_numb_val()}')
+    # print(f'{user.hand[1].suit} of {user.hand[1].call_numb_val()}')
+    # print(dealer.hand)
 
     # houses the pictures for the two decks
     deck = pygame.image.load('images/face_down.png').convert_alpha()
@@ -266,7 +276,6 @@ def main():
 
     
     # Game initialization
-
     stop_game = False
     while not stop_game:
         # looks at every event in the queue
@@ -285,8 +294,11 @@ def main():
                 # if the y key is pressed, then we add a card to our user hand
                 if event.key == pygame.K_LEFT:
                     # print these only after we have shuffled
-                    dealer_card_group.draw(screen)
-                    player_card_group.draw(screen)
+                    for card in player_card_group:
+                        card.should_show = True
+                    for card in dealer_card_group:
+                        card.should_show = True
+                    # screen.blit(player_card_group, [250, 250])
                     pygame.display.update()
 
                 # if the n key is pressed, then the we go into the dealers actions
@@ -303,15 +315,21 @@ def main():
         # Game display
         # pre-shuffled deck
         deck_group.draw(screen) ## want to add in some sort of shuffle animation that goes before the player and dealer cards are dealt
+        for card in player_card_group:
+            if card.should_show:
+                screen.blit(card.image, card.rect)
+        for card in dealer_card_group:
+            if card.should_show:
+                screen.blit(card.image, card.rect)
         pygame.draw.rect(screen, ribbon_color, ribbon)
 
 
         pygame.display.update()
-        clock.tick(60)
+        # clock.tick(60)
 
-        # Game display
-        pygame.display.update()
-        clock.tick(60)
+        # # Game display
+        # pygame.display.update()
+        # clock.tick(60)
 
     pygame.quit()
 
