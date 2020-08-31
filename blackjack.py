@@ -385,7 +385,7 @@ def main():
                                 screen.blit(card.image, card.rect)
                 
                 # if the s key is pressed, then we know that the user no longer wants any more cards
-                if event.key == pygame.K_s:
+                if event.key == pygame.K_s and player_1.should_show == True:
                     who_is_choosing = "dealer" 
                     dealer.addCards()
                     dealer.draw(main_deck)
