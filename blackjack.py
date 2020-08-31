@@ -109,6 +109,10 @@ class Dealer(object):
     def clear_hand(self):
         self.hand = []
 
+def print_da_cards(screen, some_group):         
+    for card in some_group:
+        if card.should_show:
+            screen.blit(card.image, card.rect)
 
 #  class PlayHand(object):
     #     score_board = {
@@ -219,8 +223,8 @@ def main():
     # choice variable
     who_is_choosing = "player"
 
-    width = 400
-    height = 400
+    width = 600
+    height = 600
     green_color = (0, 180, 0 )
 
     pygame.init()
@@ -266,49 +270,28 @@ def main():
     # user cards
     player_card_1 = pygame.image.load(f'images/{user.hand[0].suit}_{user.hand[0].val}.svg.png').convert_alpha()
     player_card_2 = pygame.image.load(f'images/{user.hand[1].suit}_{user.hand[1].val}.svg.png').convert_alpha()
-    # once the user has more than two cards, we add more pictures
-    if len(user.hand) == 3:
-        player_card_3 = pygame.image.load(f'images/{user.hand[2].suit}_{user.hand[2].val}.svg.png').convert_alpha()
-    elif len(user.hand) == 4:
-        player_card_4 = pygame.image.load(f'images/{user.hand[3].suit}_{user.hand[3].val}.svg.png').convert_alpha()
-    elif len(user.hand) == 5:
-        player_card_5 = pygame.image.load(f'images/{user.hand[4].suit}_{user.hand[4].val}.svg.png').convert_alpha()
-    elif len(user.hand) == 6:
-        player_card_6 = pygame.image.load(f'images/{user.hand[5].suit}_{user.hand[5].val}.svg.png').convert_alpha()
 
     # dealer cards
     dealer_card_1 = pygame.image.load(f'images/{dealer.hand[0].suit}_{dealer.hand[0].val}.svg.png').convert_alpha()
-    if who_is_choosing == "player":
-        dealer_card_2 = pygame.image.load('images/face_down.png').convert_alpha()
-    else:
-        dealer_card_2 = pygame.image.load(f'images/{dealer.hand[1].suit}_{dealer.hand[1].val}.svg.png').convert_alpha()
-    if len(dealer.hand) == 3:
-        player_card_3 = pygame.image.load(f'images/{dealer.hand[2].suit}_{dealer.hand[2].val}.svg.png').convert_alpha()
-    elif len(dealer.hand) == 4:
-        player_card_4 = pygame.image.load(f'images/{dealer.hand[3].suit}_{dealer.hand[3].val}.svg.png').convert_alpha()
-    elif len(dealer.hand) == 5:
-        player_card_5 = pygame.image.load(f'images/{dealer.hand[4].suit}_{dealer.hand[4].val}.svg.png').convert_alpha()
-    elif len(dealer.hand) == 6:
-        player_card_6 = pygame.image.load(f'images/{dealer.hand[5].suit}_{dealer.hand[5].val}.svg.png').convert_alpha()
+    dealer_card_2 = pygame.image.load('images/face_down.png').convert_alpha()
 
 
     # the two decks for shuffling
-    deck_1 = Show_Cards(deck, [180, 200])
-    deck_2 = Show_Cards(deck, [220, 200])
+    deck_1 = Show_Cards(deck, [(width/2)+50, height/2])
+    deck_2 = Show_Cards(deck, [(width/2)-50, height/2])
     deck_group = pygame.sprite.Group()
     deck_group.add(deck_1, deck_2)
 
     # The showing the dealers top card and hiding his second card after
     # the he has finishing shuffling all the decks
-    dealer_1 = Show_Cards(dealer_card_1, [180, 100])
-    dealer_2 = Show_Cards(dealer_card_2, [220, 100])
-    
+    dealer_1 = Show_Cards(dealer_card_1, [(width/2)-50, (height/2)-200])
+    dealer_2 = Show_Cards(dealer_card_2, [(width/2)+50, (height/2)-200])
     dealer_card_group = pygame.sprite.Group()
     dealer_card_group.add(dealer_1, dealer_2)
 
     # Showing both of the players cards face up
-    player_1 = Show_Cards(player_card_1, [180, 300])
-    player_2 = Show_Cards(player_card_2, [220, 300])
+    player_1 = Show_Cards(player_card_1, [(width/2)-50, (height/2)+200])
+    player_2 = Show_Cards(player_card_2, [(width/2)+50, (height/2)+200])
     player_card_group = pygame.sprite.Group()
     player_card_group.add(player_1, player_2)
 
@@ -342,47 +325,39 @@ def main():
                     pygame.display.update()
 
                 # if the h key is pressed, then we know that the user wants another card
-                if event.key == pygame.K_h and who_is_choosing == "player":
+                if event.key == pygame.K_h and who_is_choosing == "player" and player_1.should_show == True:
                     user.addCards()
                     if user.hand_score < 21:
                         user.draw(main_deck)
 
                     if len(user.hand) == 3:
                         player_card_3 = pygame.image.load(f'images/{user.hand[2].suit}_{user.hand[2].val}.svg.png').convert_alpha()
-                        player_3 = Show_Cards(player_card_3, [260, 300])
+                        player_3 = Show_Cards(player_card_3, [(width/2)+150, (height/2)+200])
                         player_3.should_show = True
                         player_card_group = pygame.sprite.Group()
                         player_card_group.add(player_1, player_2, player_3)
-                        for card in player_card_group:
-                            if card.should_show:
-                                screen.blit(card.image, card.rect)
+                        print_da_cards(screen, player_card_group)
                     elif len(user.hand) == 4:
                         player_card_4 = pygame.image.load(f'images/{user.hand[3].suit}_{user.hand[3].val}.svg.png').convert_alpha()
-                        player_4 = Show_Cards(player_card_4, [300, 300])
+                        player_4 = Show_Cards(player_card_4, [(width/2)-150, (height/2)+200])
                         player_4.should_show = True
                         player_card_group = pygame.sprite.Group()
                         player_card_group.add(player_1, player_2, player_3, player_4)
-                        for card in player_card_group:
-                            if card.should_show:
-                                screen.blit(card.image, card.rect)
+                        print_da_cards(screen, player_card_group)
                     elif len(user.hand) == 5:
                         player_card_5 = pygame.image.load(f'images/{user.hand[4].suit}_{user.hand[4].val}.svg.png').convert_alpha()
-                        player_5 = Show_Cards(player_card_5, [340, 300])
+                        player_5 = Show_Cards(player_card_5, [(width/2)+250, (height/2)+200])
                         player_5.should_show = True
                         player_card_group = pygame.sprite.Group()
                         player_card_group.add(player_1, player_2, player_3, player_4, player_5)
-                        for card in player_card_group:
-                            if card.should_show:
-                                screen.blit(card.image, card.rect)
+                        print_da_cards(screen, player_card_group)
                     elif len(user.hand) == 6:
                         player_card_6 = pygame.image.load(f'images/{user.hand[5].suit}_{user.hand[5].val}.svg.png').convert_alpha()
-                        player_6 = Show_Cards(player_card_6, [340, 300])
+                        player_6 = Show_Cards(player_card_6, [(width/2)-250, (height/2)+200])
                         player_6.should_show = True
                         player_card_group = pygame.sprite.Group()
                         player_card_group.add(player_1, player_2, player_3, player_4, player_5, player_6)
-                        for card in player_card_group:
-                            if card.should_show:
-                                screen.blit(card.image, card.rect)
+                        print_da_cards(screen, player_card_group)
                 
                 # if the s key is pressed, then we know that the user no longer wants any more cards
                 if event.key == pygame.K_s and player_1.should_show == True:
@@ -390,53 +365,42 @@ def main():
                     dealer.addCards()
                     dealer.draw(main_deck)
                     dealer_card_2 = pygame.image.load(f'images/{dealer.hand[1].suit}_{dealer.hand[1].val}.svg.png').convert_alpha()
-                    dealer_2 = Show_Cards(dealer_card_2, [220, 100])
+                    dealer_2 = Show_Cards(dealer_card_2, [(width/2)+50, (height/2)-200])
                     dealer_2.should_show = True
                     dealer_card_group = pygame.sprite.Group()
                     dealer_card_group.add(dealer_1, dealer_2)
-                    for card in dealer_card_group:
-                        if card.should_show:
-                            screen.blit(card.image, card.rect)
-                            pygame.display.update()
+                    print_da_cards(screen, dealer_card_group)
                     if dealer.hand_score < 17:
                         dealer.draw(main_deck)
                         dealer.addCards()
                         dealer_card_3 = pygame.image.load(f'images/{dealer.hand[2].suit}_{dealer.hand[2].val}.svg.png').convert_alpha()
-                        dealer_3 = Show_Cards(dealer_card_3, [260, 100])
+                        dealer_3 = Show_Cards(dealer_card_3, [(width/2)+150, (height/2)-200])
                         dealer_3.should_show = True
                         dealer_card_group = pygame.sprite.Group()
                         dealer_card_group.add(dealer_1, dealer_2, dealer_3)
-                        time.sleep(3)
-                        for card in dealer_card_group:
-                            if card.should_show:
-                                screen.blit(card.image, card.rect)
-                                pygame.display.update()
+                        time.sleep(2)
+                        print_da_cards(screen, dealer_card_group)
+                        dealer.addCards()
                     if dealer.hand_score < 17:
                         dealer.draw(main_deck)
-                        dealer.addCards()
                         dealer_card_4 = pygame.image.load(f'images/{dealer.hand[3].suit}_{dealer.hand[3].val}.svg.png').convert_alpha()
-                        dealer_4 = Show_Cards(dealer_card_4, [300, 100])
+                        dealer_4 = Show_Cards(dealer_card_4, [(width/2)-150, (height/2)-200])
                         dealer_4.should_show = True
                         dealer_card_group = pygame.sprite.Group()
                         dealer_card_group.add(dealer_1, dealer_2, dealer_3, dealer_4)
-                        time.sleep(3)
-                        for card in dealer_card_group:
-                            if card.should_show:
-                                screen.blit(card.image, card.rect)
-                                pygame.display.update()
+                        time.sleep(2)
+                        print_da_cards(screen, dealer_card_group)
+                        dealer.addCards()
                     if dealer.hand_score < 17:
                         dealer.draw(main_deck)
                         dealer.addCards()
                         dealer_card_5 = pygame.image.load(f'images/{dealer.hand[4].suit}_{dealer.hand[4].val}.svg.png').convert_alpha()
-                        dealer_5 = Show_Cards(dealer_card_5, [300, 100])
+                        dealer_5 = Show_Cards(dealer_card_5, [(width/2)+250, (height/2)-200])
                         dealer_5.should_show = True
                         dealer_card_group = pygame.sprite.Group()
                         dealer_card_group.add(dealer_1, dealer_2, dealer_3, dealer_4, dealer_5)
-                        time.sleep(3)
-                        for card in dealer_card_group:
-                            if card.should_show:
-                                screen.blit(card.image, card.rect)
-                                pygame.display.update()
+                        time.sleep(2)
+                        print_da_cards(screen, dealer_card_group)
 
                     
                 if event.key == pygame.K_r:
@@ -453,13 +417,15 @@ def main():
         # Game display
         # pre-shuffled deck
         deck_group.draw(screen) ## want to add in some sort of shuffle animation that goes before the player and dealer cards are dealt
-        for card in player_card_group:
-            if card.should_show:
-                screen.blit(card.image, card.rect)
-        for card in dealer_card_group:
-            if card.should_show:
-                screen.blit(card.image, card.rect)
-        pygame.draw.rect(screen, ribbon_color, ribbon)
+        print_da_cards(screen, player_card_group)
+        print_da_cards(screen, dealer_card_group)
+        # for card in player_card_group:
+        #     if card.should_show:
+        #         screen.blit(card.image, card.rect)
+        # for card in dealer_card_group:
+        #     if card.should_show:
+        #         screen.blit(card.image, card.rect)
+        # pygame.draw.rect(screen, ribbon_color, ribbon)
 
 
         pygame.display.update()
