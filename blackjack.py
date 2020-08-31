@@ -114,6 +114,7 @@ def print_da_cards(screen, some_group):
         if card.should_show:
             screen.blit(card.image, card.rect)
 
+
 #  class PlayHand(object):
     #     score_board = {
     #         "player" : 0,
@@ -360,47 +361,55 @@ def main():
                         print_da_cards(screen, player_card_group)
                 
                 # if the s key is pressed, then we know that the user no longer wants any more cards
+                counter = 0
                 if event.key == pygame.K_s and player_1.should_show == True:
-                    who_is_choosing = "dealer" 
-                    dealer.addCards()
-                    dealer.draw(main_deck)
-                    dealer_card_2 = pygame.image.load(f'images/{dealer.hand[1].suit}_{dealer.hand[1].val}.svg.png').convert_alpha()
-                    dealer_2 = Show_Cards(dealer_card_2, [(width/2)+50, (height/2)-200])
-                    dealer_2.should_show = True
-                    dealer_card_group = pygame.sprite.Group()
-                    dealer_card_group.add(dealer_1, dealer_2)
-                    print_da_cards(screen, dealer_card_group)
-                    if dealer.hand_score < 17:
-                        dealer.draw(main_deck)
+                    if counter == 0:
+                        counter += 1
+                        who_is_choosing = "dealer" 
                         dealer.addCards()
-                        dealer_card_3 = pygame.image.load(f'images/{dealer.hand[2].suit}_{dealer.hand[2].val}.svg.png').convert_alpha()
-                        dealer_3 = Show_Cards(dealer_card_3, [(width/2)+150, (height/2)-200])
-                        dealer_3.should_show = True
+                        dealer.draw(main_deck)
+                        dealer_card_2 = pygame.image.load(f'images/{dealer.hand[1].suit}_{dealer.hand[1].val}.svg.png').convert_alpha()
+                        dealer_2 = Show_Cards(dealer_card_2, [(width/2)+50, (height/2)-200])
+                        dealer_2.should_show = True
                         dealer_card_group = pygame.sprite.Group()
-                        dealer_card_group.add(dealer_1, dealer_2, dealer_3)
+                        dealer_card_group.add(dealer_1, dealer_2)
                         time.sleep(2)
                         print_da_cards(screen, dealer_card_group)
-                        dealer.addCards()
-                    if dealer.hand_score < 17:
-                        dealer.draw(main_deck)
-                        dealer_card_4 = pygame.image.load(f'images/{dealer.hand[3].suit}_{dealer.hand[3].val}.svg.png').convert_alpha()
-                        dealer_4 = Show_Cards(dealer_card_4, [(width/2)-150, (height/2)-200])
-                        dealer_4.should_show = True
-                        dealer_card_group = pygame.sprite.Group()
-                        dealer_card_group.add(dealer_1, dealer_2, dealer_3, dealer_4)
-                        time.sleep(2)
-                        print_da_cards(screen, dealer_card_group)
-                        dealer.addCards()
-                    if dealer.hand_score < 17:
-                        dealer.draw(main_deck)
-                        dealer.addCards()
-                        dealer_card_5 = pygame.image.load(f'images/{dealer.hand[4].suit}_{dealer.hand[4].val}.svg.png').convert_alpha()
-                        dealer_5 = Show_Cards(dealer_card_5, [(width/2)+250, (height/2)-200])
-                        dealer_5.should_show = True
-                        dealer_card_group = pygame.sprite.Group()
-                        dealer_card_group.add(dealer_1, dealer_2, dealer_3, dealer_4, dealer_5)
-                        time.sleep(2)
-                        print_da_cards(screen, dealer_card_group)
+                        while dealer.hand_score < 17:
+                            dealer.draw(main_deck)
+                            dealer.addCards()
+                        if len(dealer.hand) == 3:
+
+                            dealer_card_3 = pygame.image.load(f'images/{dealer.hand[2].suit}_{dealer.hand[2].val}.svg.png').convert_alpha()
+                            dealer_3 = Show_Cards(dealer_card_3, [(width/2)+150, (height/2)-200])
+                            dealer_3.should_show = True
+                            dealer_card_group = pygame.sprite.Group()
+                            dealer_card_group.add(dealer_1, dealer_2, dealer_3)
+                            
+                            print_da_cards(screen, dealer_card_group)
+                            pygame.display.update()
+                            clock.tick(10)
+                            if len(dealer.hand) == 4:
+                                dealer_card_4 = pygame.image.load(f'images/{dealer.hand[3].suit}_{dealer.hand[3].val}.svg.png').convert_alpha()
+                                dealer_4 = Show_Cards(dealer_card_4, [(width/2)-150, (height/2)-200])
+                                dealer_4.should_show = True
+                                dealer_card_group = pygame.sprite.Group()
+                                dealer_card_group.add(dealer_1, dealer_2, dealer_3, dealer_4)
+                                
+                                print_da_cards(screen, dealer_card_group)
+                                pygame.display.update()
+                                clock.tick(10)
+                                if len(dealer.hand) == 5:
+                                    dealer.draw(main_deck)
+                                    dealer.addCards()
+                                    dealer_card_5 = pygame.image.load(f'images/{dealer.hand[4].suit}_{dealer.hand[4].val}.svg.png').convert_alpha()
+                                    dealer_5 = Show_Cards(dealer_card_5, [(width/2)+250, (height/2)-200])
+                                    dealer_5.should_show = True
+                                    dealer_card_group = pygame.sprite.Group()
+                                    dealer_card_group.add(dealer_1, dealer_2, dealer_3, dealer_4, dealer_5)
+                                    
+                                    print_da_cards(screen, dealer_card_group)
+                        
 
                     
                 if event.key == pygame.K_r:
