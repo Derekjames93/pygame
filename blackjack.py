@@ -245,7 +245,7 @@ def main():
                     stop_game = True
 
                 # if the y key is pressed, then we add a card to our user hand
-                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_SPACE:
                     # print these only after we have shuffled
                     # shuffle_animation(screen, deck_group)
                     for card in player_card_group:
