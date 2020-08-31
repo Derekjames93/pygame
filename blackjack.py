@@ -4,7 +4,7 @@ import time
 
 class Card(object):
     numb_direct = {
-        # an ace can be either 1 or 11
+        # an ace can be either 1 or 11. Should use a list for it
         "Ace" : 11,
         "Two" : 2,
         "Three" : 3,
@@ -109,10 +109,13 @@ class Dealer(object):
     def clear_hand(self):
         self.hand = []
 
-def print_da_cards(screen, some_group):         
+def print_the_cards(screen, some_group):         
     for card in some_group:
         if card.should_show:
             screen.blit(card.image, card.rect)
+
+def new_pic(player, index):
+    return pygame.image.load(f'images/{player.hand[index].suit}_{player.hand[index].val}.svg.png').convert_alpha()
 
 # def shuffle_animation(screen, card_group):
 #     left_card_coord = [[(600/2)-50, (600/2)+10],[(600/2)+50, (600/2)+10], [(600/2)-50, (600/2)+10],[(600/2)+50, (600/2)+10], [(600/2)-50, (600/2)+10]]
@@ -130,102 +133,8 @@ def print_da_cards(screen, some_group):
 #                 card.rect = right_card_coord[counter_right]
 #                 counter_right += 1
 #             counter_2 += 1
-#             print_da_cards(screen, card_group)
+#             print_the_cards(screen, card_group)
 #         counter_1 += 1
-
-
-#  class PlayHand(object):
-    #     score_board = {
-    #         "player" : 0,
-    #         "dealer" : 0
-    #     }
-
-    #     def __init__(self):
-    #         self.deck = Deck()
-    #         self.player = Player()
-    #         self.dealer = Dealer()
-    #         self.play()
-
-    #     def play(self):
-    #         self.player.clear_hand()
-    #         self.dealer.clear_hand()
-    #         self.deck.shuffle()
-    #         #self.deck.show()
-    #         #deal to player then dealer from the top of the deck, iterates twice. If modulus is 0 then it deals to player, if not, then it deals to the dealer
-    #         for i in range(0,4):
-    #             if i % 2 == 0:
-    #                 self.player.draw(self.deck)
-    #             else:
-    #                 self.dealer.draw(self.deck)
-
-    #         self.player.showHand()
-    #         self.player.addCards()
-    #         self.dealer.showTopCard()
-
-
-    #     def playerChoice(self):
-    #         if pygame.KEYDOWN == K_h:
-    #             self.player.draw(self.deck)
-    #             self.player.addCards()
-    #             if self.player.hand_score > 21:
-    #                 self.dealerwins()
-    #             return "hit"
-    #         elif pygame.KEYDOWN == K_s:
-    #             self.dealerChoice()
-    #             return "stay"
-
-        
-    #     def dealerChoice(self):
-    #         self.dealer.showHand()
-    #         self.dealer.addCards()
-    #         dealer_choice = ""
-    #         while dealer_choice != "stay":
-    #             if self.dealer.hand_score < 17:
-    #                 self.dealer.draw(self.deck)
-    #                 self.dealer.addCards()
-    #                 if self.dealer.hand_score > 21:
-    #                     self.playerwins()
-    #                 dealer_choice = "hit"
-    #             elif self.dealer.hand_score >= 17:
-    #                 dealer_choice = "stay"
-    #         self.decide_who_wins()
-
-        # def decide_who_wins(self):
-        #     if self.dealer.hand_score > self.player.hand_score:
-        #         self.dealerwins()
-        #     elif self.dealer.hand_score < self.player.hand_score:
-        #         self.playerwins()
-            # else:
-            #     print("The hand is pushed.\n\n")
-            #     dec = input("Play again?\n\n> ")
-            #     if dec == "yes":
-            #         self.play()
-            #     if dec == "no":
-            #         exit(0)
-
-        # def playerwins(self):
-        #     PlayHand.score_board["player"] += 1
-
-
-        # def dealerwins(self):
-        #     PlayHand.score_board["dealer"] += 1
-
-
-        # def prn_score(self):
-        #     player_score = PlayHand.score_board.get("player")
-        #     dealer_score = PlayHand.score_board.get("dealer")
-        #     total_hands = player_score + dealer_score
-        #     time.sleep(3)
-        #     print(f"\n\nAfter {total_hands} hands the score is:")
-        #     print(f"{self.player_name} has won {player_score} hands")
-        #     print(f"The Dealer has won {dealer_score} hands")
-        #     time.sleep(2)
-        #     print("\n\nWould you like to play another hand?")
-        #     resp = input("> ")
-        #     if resp == "yes":
-        #         self.play()
-        #     if resp == "no":
-        #         exit(0)
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, image, pos):
@@ -289,11 +198,11 @@ def main():
 
     
     # user cards
-    player_card_1 = pygame.image.load(f'images/{user.hand[0].suit}_{user.hand[0].val}.svg.png').convert_alpha()
-    player_card_2 = pygame.image.load(f'images/{user.hand[1].suit}_{user.hand[1].val}.svg.png').convert_alpha()
+    player_card_1 = new_pic(user, 0)
+    player_card_2 = new_pic(user, 1)
 
     # dealer cards
-    dealer_card_1 = pygame.image.load(f'images/{dealer.hand[0].suit}_{dealer.hand[0].val}.svg.png').convert_alpha()
+    dealer_card_1 = new_pic(dealer, 0)
     dealer_card_2 = pygame.image.load('images/face_down.png').convert_alpha()
 
 
@@ -349,37 +258,38 @@ def main():
                 # if the h key is pressed, then we know that the user wants another card
                 if event.key == pygame.K_h and who_is_choosing == "player" and player_1.should_show == True:
                     user.addCards()
+                    print(f'\n\nUsers score is:{user.hand_score}')
                     if user.hand_score < 21:
                         user.draw(main_deck)
 
                     if len(user.hand) == 3:
-                        player_card_3 = pygame.image.load(f'images/{user.hand[2].suit}_{user.hand[2].val}.svg.png').convert_alpha()
+                        player_card_3 = new_pic(user, 2)
                         player_3 = Show_Cards(player_card_3, [(width/2)+150, (height/2)+200])
                         player_3.should_show = True
                         player_card_group = pygame.sprite.Group()
                         player_card_group.add(player_1, player_2, player_3)
-                        print_da_cards(screen, player_card_group)
+                        print_the_cards(screen, player_card_group)
                     elif len(user.hand) == 4:
-                        player_card_4 = pygame.image.load(f'images/{user.hand[3].suit}_{user.hand[3].val}.svg.png').convert_alpha()
+                        player_card_4 = new_pic(user, 3)
                         player_4 = Show_Cards(player_card_4, [(width/2)-150, (height/2)+200])
                         player_4.should_show = True
                         player_card_group = pygame.sprite.Group()
                         player_card_group.add(player_1, player_2, player_3, player_4)
-                        print_da_cards(screen, player_card_group)
+                        print_the_cards(screen, player_card_group)
                     elif len(user.hand) == 5:
-                        player_card_5 = pygame.image.load(f'images/{user.hand[4].suit}_{user.hand[4].val}.svg.png').convert_alpha()
+                        player_card_5 = new_pic(user, 4)
                         player_5 = Show_Cards(player_card_5, [(width/2)+250, (height/2)+200])
                         player_5.should_show = True
                         player_card_group = pygame.sprite.Group()
                         player_card_group.add(player_1, player_2, player_3, player_4, player_5)
-                        print_da_cards(screen, player_card_group)
+                        print_the_cards(screen, player_card_group)
                     elif len(user.hand) == 6:
-                        player_card_6 = pygame.image.load(f'images/{user.hand[5].suit}_{user.hand[5].val}.svg.png').convert_alpha()
+                        player_card_6 = new_pic(user, 5)
                         player_6 = Show_Cards(player_card_6, [(width/2)-250, (height/2)+200])
                         player_6.should_show = True
                         player_card_group = pygame.sprite.Group()
                         player_card_group.add(player_1, player_2, player_3, player_4, player_5, player_6)
-                        print_da_cards(screen, player_card_group)
+                        print_the_cards(screen, player_card_group)
                 
                 # if the s key is pressed, then we know that the user no longer wants any more cards
                 counter = 0
@@ -388,48 +298,49 @@ def main():
                         counter += 1
                         who_is_choosing = "dealer" 
                         dealer.addCards()
-                        dealer.draw(main_deck)
-                        dealer_card_2 = pygame.image.load(f'images/{dealer.hand[1].suit}_{dealer.hand[1].val}.svg.png').convert_alpha()
+                        dealer_card_2 = new_pic(dealer, 1)
                         dealer_2 = Show_Cards(dealer_card_2, [(width/2)+50, (height/2)-200])
                         dealer_2.should_show = True
                         dealer_card_group = pygame.sprite.Group()
                         dealer_card_group.add(dealer_1, dealer_2)
                         time.sleep(2)
-                        print_da_cards(screen, dealer_card_group)
+                        print_the_cards(screen, dealer_card_group)
+                        print(f'Dealers score is: {dealer.hand_score}')
                         while dealer.hand_score < 17:
                             dealer.draw(main_deck)
                             dealer.addCards()
+                            print(f'Dealers score is: {dealer.hand_score}')
                         if len(dealer.hand) == 3:
 
-                            dealer_card_3 = pygame.image.load(f'images/{dealer.hand[2].suit}_{dealer.hand[2].val}.svg.png').convert_alpha()
+                            dealer_card_3 = new_pic(dealer, 2)
                             dealer_3 = Show_Cards(dealer_card_3, [(width/2)+150, (height/2)-200])
                             dealer_3.should_show = True
                             dealer_card_group = pygame.sprite.Group()
                             dealer_card_group.add(dealer_1, dealer_2, dealer_3)
                             
-                            print_da_cards(screen, dealer_card_group)
+                            print_the_cards(screen, dealer_card_group)
                             pygame.display.update()
                             clock.tick(10)
                             if len(dealer.hand) == 4:
-                                dealer_card_4 = pygame.image.load(f'images/{dealer.hand[3].suit}_{dealer.hand[3].val}.svg.png').convert_alpha()
+                                dealer_card_4 = new_pic(dealer, 3)
                                 dealer_4 = Show_Cards(dealer_card_4, [(width/2)-150, (height/2)-200])
                                 dealer_4.should_show = True
                                 dealer_card_group = pygame.sprite.Group()
                                 dealer_card_group.add(dealer_1, dealer_2, dealer_3, dealer_4)
                                 
-                                print_da_cards(screen, dealer_card_group)
+                                print_the_cards(screen, dealer_card_group)
                                 pygame.display.update()
                                 clock.tick(10)
                                 if len(dealer.hand) == 5:
-                                    dealer.draw(main_deck)
+                                    
                                     dealer.addCards()
-                                    dealer_card_5 = pygame.image.load(f'images/{dealer.hand[4].suit}_{dealer.hand[4].val}.svg.png').convert_alpha()
+                                    dealer_card_5 = new_pic(dealer, 4)
                                     dealer_5 = Show_Cards(dealer_card_5, [(width/2)+250, (height/2)-200])
                                     dealer_5.should_show = True
                                     dealer_card_group = pygame.sprite.Group()
                                     dealer_card_group.add(dealer_1, dealer_2, dealer_3, dealer_4, dealer_5)
                                     
-                                    print_da_cards(screen, dealer_card_group)
+                                    print_the_cards(screen, dealer_card_group)
                         
 
                     
@@ -437,6 +348,7 @@ def main():
                     dealer.clear_hand()
                     user.clear_hand()
                     main()
+            
         # gets all the keys currently pressed
         keys = pygame.key.get_pressed()
         # Game logic
@@ -446,25 +358,12 @@ def main():
 
         # Game display
         # pre-shuffled deck
-        deck_group.draw(screen) ## want to add in some sort of shuffle animation that goes before the player and dealer cards are dealt
-        print_da_cards(screen, player_card_group)
-        print_da_cards(screen, dealer_card_group)
-        # for card in player_card_group:
-        #     if card.should_show:
-        #         screen.blit(card.image, card.rect)
-        # for card in dealer_card_group:
-        #     if card.should_show:
-        #         screen.blit(card.image, card.rect)
-        # pygame.draw.rect(screen, ribbon_color, ribbon)
-
+        deck_group.draw(screen)
+        print_the_cards(screen, player_card_group)
+        print_the_cards(screen, dealer_card_group)
 
         pygame.display.update()
-        # clock.tick(60)
 
-        # # Game display
-        # pygame.display.update()
-        # clock.tick(60)
-    pygame.display.update()
     pygame.quit()
 
 if __name__ == '__main__':
