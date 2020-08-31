@@ -4,7 +4,7 @@ import time
 
 class Card(object):
     numb_direct = {
-        # an ace can be either 1 or 11. Should use a list for it
+        # need to add that an ace can be either 1 or 11. Should use a list for it
         "Ace" : 11,
         "Two" : 2,
         "Three" : 3,
