@@ -130,7 +130,7 @@ def print_da_cards(screen, some_group):
 #                 card.rect = right_card_coord[counter_right]
 #                 counter_right += 1
 #             counter_2 += 1
-#         print_da_cards(screen, card_group)
+#             print_da_cards(screen, card_group)
 #         counter_1 += 1
 
 
