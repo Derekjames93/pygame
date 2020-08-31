@@ -114,6 +114,25 @@ def print_da_cards(screen, some_group):
         if card.should_show:
             screen.blit(card.image, card.rect)
 
+# def shuffle_animation(screen, card_group):
+#     left_card_coord = [[(600/2)-50, (600/2)+10],[(600/2)+50, (600/2)+10], [(600/2)-50, (600/2)+10],[(600/2)+50, (600/2)+10], [(600/2)-50, (600/2)+10]]
+#     right_card_coord = [[(600/2)+50, (600/2)+10], [(600/2)-50, (600/2)+10],[(600/2)+50, (600/2)+10], [(600/2)-50, (600/2)+10], [(600/2)+50, (600/2)+10]]
+#     counter_1 = 0
+#     while counter_1 < 10:
+#         counter_2 = 0
+#         counter_left = 0
+#         counter_right = 0
+#         for card in card_group:
+#             if counter_2 % 2 == 0:
+#                 card.rect = left_card_coord[counter_left]
+#                 counter_left += 1
+#             else:
+#                 card.rect = right_card_coord[counter_right]
+#                 counter_right += 1
+#             counter_2 += 1
+#         print_da_cards(screen, card_group)
+#         counter_1 += 1
+
 
 #  class PlayHand(object):
     #     score_board = {
@@ -216,6 +235,7 @@ class Block(pygame.sprite.Sprite):
         self.rect.center = pos
         self.should_show = False
 
+
 class Show_Cards(Block):
     pass
 
@@ -316,8 +336,9 @@ def main():
                     stop_game = True
 
                 # if the y key is pressed, then we add a card to our user hand
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     # print these only after we have shuffled
+                    # shuffle_animation(screen, deck_group)
                     for card in player_card_group:
                         card.should_show = True
                     for card in dealer_card_group:
